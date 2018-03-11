@@ -12,17 +12,17 @@ import * as stream from "stream";
 import * as child_process from "child_process";
 
 export interface IBlessedProgramOptions {
-  input?: Readable;
-  output?: Writable;
-  log?: string;
-  dump?: boolean;
-  zero?: boolean;
-  buffer?: boolean;
-  terminal?: string;
-  term?: string;
-  tput?: string;
-  debug?: boolean;
-  resizeTimeout?: boolean;
+    input?: Readable;
+    output?: Writable;
+    log?: string;
+    dump?: boolean;
+    zero?: boolean;
+    buffer?: boolean;
+    terminal?: string;
+    term?: string;
+    tput?: string;
+    debug?: boolean;
+    resizeTimeout?: boolean;
 }
 
 export class BlessedProgram extends EventEmitter {
@@ -64,11 +64,11 @@ export class BlessedProgram extends EventEmitter {
     listen(): void;
     destroy(): void;
 
-    key(key: string|string[], listener: Function): void;
-    onceKey(key: string|string[], listener: Function): void;
+    key(key: string | string[], listener: Function): void;
+    onceKey(key: string | string[], listener: Function): void;
 
-    unKey(key: string|string[], listener: Function): void;
-    removeKey(key: string|string[], listener: Function): void;
+    unKey(key: string | string[], listener: Function): void;
+    removeKey(key: string | string[], listener: Function): void;
 
     bindMouse(): void;
     enableGpm(): void;
@@ -475,10 +475,11 @@ export namespace Widgets {
             ch?: string;
 
             /**
-             * Border foreground and background, must be numbers (-1 for default).
+             * Border foreground and background, can be strings or numbers (-1 for default).
+             * See https://github.com/chjj/blessed/issues/335
              */
-            bg?: number;
-            fg?: number;
+            bg?: (number | string);
+            fg?: (number | string);
 
             /**
              * Border attributes.
@@ -593,7 +594,7 @@ export namespace Widgets {
         destroy(): void;
     }
 
-    interface IOptions {}
+    interface IOptions { }
 
     interface IHasOptions<T extends IOptions> {
         options: T;
@@ -635,32 +636,32 @@ export namespace Widgets {
             data: any,
             file: string
         ): {
-            header: {
-                dataSize: number;
-                headerSize: number;
-                magicNumber: boolean;
-                namesSize: number;
-                boolCount: number;
-                numCount: number;
-                strCount: number;
-                strTableSize: number;
-                extended: {
+                header: {
                     dataSize: number;
                     headerSize: number;
+                    magicNumber: boolean;
+                    namesSize: number;
                     boolCount: number;
                     numCount: number;
                     strCount: number;
                     strTableSize: number;
-                    lastStrTableOffset: number;
+                    extended: {
+                        dataSize: number;
+                        headerSize: number;
+                        boolCount: number;
+                        numCount: number;
+                        strCount: number;
+                        strTableSize: number;
+                        lastStrTableOffset: number;
+                    };
                 };
+                name: string;
+                names: string[];
+                desc: string;
+                bools: any;
+                numbers: any;
+                strings: any;
             };
-            name: string;
-            names: string[];
-            desc: string;
-            bools: any;
-            numbers: any;
-            strings: any;
-        };
     }
 
     interface IDestroyable {
@@ -1527,10 +1528,11 @@ export namespace Widgets {
         ch?: string;
 
         /**
-         * Border foreground and background, must be numbers (-1 for default).
+        * Border foreground and background, can be strings or numbers (-1 for default).
+        * See https://github.com/chjj/blessed/issues/335
          */
-        bg?: number;
-        fg?: number;
+        bg?: (number | string);
+        fg?: (number | string);
 
         /**
          * Border attributes.
@@ -1700,10 +1702,11 @@ export namespace Widgets {
         detached: boolean;
 
         /**
-         * Border foreground and background, must be numbers (-1 for default).
+         * Border foreground and background, can be strings or numbers (-1 for default).
+         * See https://github.com/chjj/blessed/issues/335
          */
-        bg: number;
-        fg: number;
+        bg?: (number | string);
+        fg?: (number | string);
 
         /**
          * Border attributes.
@@ -2152,7 +2155,7 @@ export namespace Widgets {
      * A scrollable text box which can display and scroll text, as well as handle
      * pre-existing newlines and escape codes.
      */
-    class ScrollableTextElement extends ScrollableBoxElement {}
+    class ScrollableTextElement extends ScrollableBoxElement { }
 
     /**
      * A box element which draws a simple box containing content or other elements.
@@ -2657,7 +2660,7 @@ export namespace Widgets {
         on(event: "cancel" | "reset", callback: () => void): this;
     }
 
-    interface InputOptions extends BoxOptions {}
+    interface InputOptions extends BoxOptions { }
 
     abstract class InputElement extends BoxElement {
         constructor(opts: InputOptions);
@@ -2792,7 +2795,7 @@ export namespace Widgets {
         censor: boolean;
     }
 
-    interface ButtonOptions extends BoxOptions {}
+    interface ButtonOptions extends BoxOptions { }
 
     class ButtonElement extends InputElement implements IHasOptions<ButtonOptions> {
         constructor(opts: ButtonOptions);
@@ -2865,7 +2868,7 @@ export namespace Widgets {
         toggle(): void;
     }
 
-    interface RadioSetOptions extends BoxOptions {}
+    interface RadioSetOptions extends BoxOptions { }
 
     /**
      * An element wrapping RadioButtons. RadioButtons within this element will be mutually exclusive
@@ -2875,7 +2878,7 @@ export namespace Widgets {
         constructor(opts: RadioSetOptions);
     }
 
-    interface RadioButtonOptions extends BoxOptions {}
+    interface RadioButtonOptions extends BoxOptions { }
 
     /**
      * A radio button which can be used in a form element.
@@ -2884,7 +2887,7 @@ export namespace Widgets {
         constructor(opts: RadioButtonOptions);
     }
 
-    interface PromptOptions extends BoxOptions {}
+    interface PromptOptions extends BoxOptions { }
 
     /**
      * A prompt box containing a text input, okay, and cancel buttons (automatically hidden).
@@ -2902,7 +2905,7 @@ export namespace Widgets {
         readInput(text: string, value: string, callback: (err: any, value: string) => void): void;
     }
 
-    interface QuestionOptions extends BoxOptions {}
+    interface QuestionOptions extends BoxOptions { }
 
     /**
      * A question box containing okay and cancel buttons (automatically hidden).
@@ -2918,7 +2921,7 @@ export namespace Widgets {
         ask(question: string, callback: (err: any, value: string) => void): void;
     }
 
-    interface MessageOptions extends BoxOptions {}
+    interface MessageOptions extends BoxOptions { }
 
     /**
      * A box containing a message to be displayed (automatically hidden).
@@ -2944,7 +2947,7 @@ export namespace Widgets {
         error(text: string, callback: () => void): void;
     }
 
-    interface LoadingOptions extends BoxOptions {}
+    interface LoadingOptions extends BoxOptions { }
 
     /**
      * A box with a spinning line to denote loading (automatically hidden).
@@ -3415,7 +3418,7 @@ export namespace Widgets {
 }
 
 export namespace widget {
-    class Terminal extends Widgets.TerminalElement {}
+    class Terminal extends Widgets.TerminalElement { }
 }
 
 export function screen(options?: Widgets.IScreenOptions): Widgets.Screen;
